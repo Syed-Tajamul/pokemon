@@ -1,0 +1,10 @@
+name = "pokemon-worker"
+main = "src/index.ts"
+compatibility_date = "2025-06-08"
+compatibility_flags = [ "nodejs_compat", "nodejs_compat_populate_process_env" ]
+
+[[d1_databases]]
+binding = "todo_database"                   
+database_name = "todo-database"     
+database_id = "b2d70767-5435-43eb-accf-8388fc284211"
+migrations_dir = "drizzle"
