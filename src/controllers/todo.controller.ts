@@ -10,11 +10,12 @@ import Elysia, { error, t } from "elysia";
 import { eq } from "drizzle-orm";
 import { createInsertSchema, createUpdateSchema } from "drizzle-typebox";
 import { todos } from "../db/schema/todo";
-import { db } from "../db/schema";
 import { failure, success } from "../utils/response";
 import { TParamsId } from "../utils/validation";
 import { genId } from "../utils/id";
 import { omitFields } from "../db/schema/common";
+import { drizzle } from "drizzle-orm/libsql/driver";
+import { db as db1 } from "../db/schema/index";
 
 
 const CreateTodoDTO = createInsertSchema(todos);
@@ -26,15 +27,16 @@ export const TodoController = new Elysia({
         tags: ["Todos"],
     }
 })
-    .get("", async () => {
-        // const rows = await db.select().from(todos);
-        // return success({ todos: rows });
-        return "todos list";
-    })
+    .get("", async ({ db }) => {
+        const rows = await db.select()
+            .from(todos)
+            .all();
+        return success({ todos: rows });
 
+    })
     .get(
         "/:id",
-        async ({ params: { id } }) => {
+        async ({ params: { id }, db }) => {
             const rows = await db
                 .select()
                 .from(todos)
@@ -49,32 +51,27 @@ export const TodoController = new Elysia({
         },
         { params: TParamsId }
     )
-
     .post(
         "",
-        async ({ body, set }) => {
-            const insertData = {
-                id: body.id,
-                title: body.title,
-                description: body.description,
-            };
+        async ({ body, db, set }) => {
 
             const rows = await db
-                .insert(todos)
-                .values(insertData)
-            // .returning();
+                .insert(todos).values({
+                    id: genId("todo"),
+                    title: body.title,
+                    description: body.description,
+                })
+                .returning();
 
             set.status = 201;
-            // return success({ todo: rows[0] });
+            return success({ todo: rows[0] });
         },
-        {
-            body: t.Omit(CreateTodoDTO, omitFields)
-        }
+        { body: t.Omit(CreateTodoDTO, omitFields) }
     )
 
     .put(
         "/:id",
-        async ({ params: { id }, body }) => {
+        async ({ params: { id }, body, db }) => {
             const rows = await db
                 .update(todos)
                 .set(body)

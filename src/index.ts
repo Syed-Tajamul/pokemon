@@ -2,6 +2,7 @@ import { Env } from "bun"
 import { Context } from "elysia"
 import { app } from "./routes/app"
 
+
 export default {
   async fetch(
     request: Request,
@@ -9,10 +10,9 @@ export default {
     ctx: Context,
 
   ): Promise<Response> {
-    // const expectedAuth = `Basic ${btoa(`admin:${env.BASIC_AUTH_PASSWORD}`)}`
     const pathname = new URL(request.url).pathname
-
-    return await app.fetch(request)
+    app.store.env = env
+    return await app.handle(request)
   },
 }
 
