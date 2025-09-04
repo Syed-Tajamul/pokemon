@@ -4,12 +4,7 @@ import { app } from "./routes/app"
 
 
 export default {
-  async fetch(
-    request: Request,
-    env: Env,
-    ctx: Context,
-
-  ): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: Context): Promise<Response> {
     const pathname = new URL(request.url).pathname
     app.store.env = env
     return await app.handle(request)

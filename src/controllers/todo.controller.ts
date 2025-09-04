@@ -14,8 +14,6 @@ import { failure, success } from "../utils/response";
 import { TParamsId } from "../utils/validation";
 import { genId } from "../utils/id";
 import { omitFields } from "../db/schema/common";
-import { drizzle } from "drizzle-orm/libsql/driver";
-import { db as db1 } from "../db/schema/index";
 
 
 const CreateTodoDTO = createInsertSchema(todos);
