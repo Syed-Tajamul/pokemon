@@ -26,11 +26,10 @@ export const TodoController = new Elysia({
     }
 })
     .get("", async ({ db }) => {
-        return "tawseef janu lateef janu ubaid januuuu obaaa"
-        // const rows = await db.select()
-        //     .from(todos)
-        //     .all();
-        // return success({ todos: rows });
+        const rows = await db.select()
+            .from(todos)
+            .all();
+        return success({ todos: rows });
 
     })
     .get(
