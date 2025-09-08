@@ -14,20 +14,18 @@ import { failure, success } from "../utils/response";
 import { TParamsId } from "../utils/validation";
 import { genId } from "../utils/id";
 import { omitFields } from "../db/schema/common";
-import { db as db1 } from "../db/schema";
-
 
 const CreateTodoDTO = createInsertSchema(todos);
 const UpdateTodoDTO = createUpdateSchema(todos);
 
 export const TodoController = new Elysia({
-    prefix: "todoss",
+    prefix: "todos",
     detail: {
         tags: ["Todos"],
     }
 })
     .get("", async ({ db }) => {
-        const rows = await db1.select()
+        const rows = await db.select()
             .from(todos)
             .all();
         return success({ todos: rows });
@@ -36,7 +34,7 @@ export const TodoController = new Elysia({
     .get(
         "/:id",
         async ({ params: { id }, db }) => {
-            const rows = await db1
+            const rows = await db
                 .select()
                 .from(todos)
                 .where(eq(todos.id, id))
@@ -54,7 +52,7 @@ export const TodoController = new Elysia({
         "",
         async ({ body, db, set }) => {
 
-            const rows = await db1
+            const rows = await db
                 .insert(todos).values({
                     id: genId("todo"),
                     title: body.title,
@@ -71,7 +69,7 @@ export const TodoController = new Elysia({
     .put(
         "/:id",
         async ({ params: { id }, body, db }) => {
-            const rows = await db1
+            const rows = await db
                 .update(todos)
                 .set(body)
                 .where(eq(todos.id, id))
