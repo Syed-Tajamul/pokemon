@@ -21,7 +21,7 @@ const CreateTodoDTO = createInsertSchema(todos);
 const UpdateTodoDTO = createUpdateSchema(todos);
 
 export const TodoController = new Elysia({
-    prefix: "todos",
+    prefix: "todoss",
     detail: {
         tags: ["Todos"],
     }
