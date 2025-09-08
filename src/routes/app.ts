@@ -20,7 +20,7 @@ export const app = new Elysia({ aot: false })
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
     }))
-    // .derive(() => ({ get db() { return drizzle((app.store.env.todo_database)) } }))
+    .derive(() => ({ get db() { return drizzle((app.store.env.todo_database)) } }))
     .onError(({ code, error }) => {
         console.log(code)
         return new Response(JSON.stringify({ error: error.toString() ?? code }), { status: 500 })
